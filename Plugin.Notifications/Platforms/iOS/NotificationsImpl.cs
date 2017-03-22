@@ -64,16 +64,7 @@ namespace Acr.Notifications
         }
 
 
-        public override void CancelAll()
-        {
-            this.Badge = 0;
-            UIApplication.SharedApplication.CancelAllLocalNotifications();
-        }
-
-
-        public override void Vibrate(int ms)
-        {
-            SystemSound.Vibrate.PlaySystemSound();
-        }
+        public override void CancelAll() => UIApplication.SharedApplication.CancelAllLocalNotifications();
+        public override void Vibrate(int ms) => SystemSound.Vibrate.PlaySystemSound();
     }
 }
