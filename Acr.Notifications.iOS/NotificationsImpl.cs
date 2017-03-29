@@ -23,8 +23,11 @@ namespace Acr.Notifications
 
         public override int Badge
         {
-            get { return (int)UIApplication.SharedApplication.ApplicationIconBadgeNumber; }
-            set { UIApplication.SharedApplication.ApplicationIconBadgeNumber = value; }
+            get => (int)UIApplication.SharedApplication.ApplicationIconBadgeNumber;
+            set
+            {
+                UIApplication.SharedApplication.InvokeOnMainThread(() => UIApplication.SharedApplication.ApplicationIconBadgeNumber = value);
+            }
         }
 
 
@@ -34,15 +37,20 @@ namespace Acr.Notifications
             var userInfo = new NSMutableDictionary();
             userInfo.Add(new NSString("MessageID"), new NSString(msgId));
 
-            var not = new UILocalNotification
+            UIApplication.SharedApplication.InvokeOnMainThread(() =>
             {
-                FireDate = (NSDate)notification.SendTime,
-                AlertAction = notification.Title,
-                AlertBody = notification.Message,
-                SoundName = notification.Sound,
-                UserInfo = userInfo
-            };
-            UIApplication.SharedApplication.ScheduleLocalNotification(not);
+                using (var not = new UILocalNotification
+                {
+                    FireDate = (NSDate) notification.SendTime,
+                    AlertAction = notification.Title,
+                    AlertBody = notification.Message,
+                    SoundName = notification.Sound,
+                    UserInfo = userInfo
+                })
+                {
+                    UIApplication.SharedApplication.ScheduleLocalNotification(not);
+                }
+            });
             return msgId;
         }
 
@@ -71,9 +79,7 @@ namespace Acr.Notifications
         }
 
 
-        public override void Vibrate(int ms)
-        {
+        public override void Vibrate(int ms) =>
             SystemSound.Vibrate.PlaySystemSound();
-        }
     }
 }

@@ -1,9 +1,10 @@
 using System;
+using Java.IO;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V4.App;
-using Java.IO;
+using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 
 
 namespace Acr.Notifications
@@ -100,7 +101,7 @@ namespace Acr.Notifications
 
         public override int Badge
         {
-            get { return NotificationSettings.Instance.CurrentBadge; }
+            get => NotificationSettings.Instance.CurrentBadge;
             set
             {
                 NotificationSettings.Instance.CurrentBadge = value;
